@@ -1,0 +1,18 @@
+# install esphome 
+pip3 install wheel
+pip3 install esphome
+
+#check what version you have	
+esphome version
+
+#* means rest of the name of the file 
+
+#check configuration file
+esphome config ikea*.yaml
+
+#compile FW from the configuration file
+esphome compile ikea*.yaml
+
+#upload compiled file to the device
+esphome upload ikea*.yaml --device COMn
+

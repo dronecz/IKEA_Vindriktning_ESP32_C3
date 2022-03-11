@@ -1,0 +1,66 @@
+substitutions:
+  I2C_SCL: GPIO5
+  I2C_SDA: GPIO4
+  pm1006_pin_rx: GPIO20 
+  pm1006_update_interval: 5s
+  
+esphome:
+  name: ikea-vindriktning
+  platformio_options:
+    board_build.flash_mode: dio
+    board_upload.flash_size: 2MB
+    board_build.partitions: partitions_singleapp.csv
+
+esp32:
+  board: esp32-c3-devkitm-1
+  framework:
+    type: esp-idf
+    version: recommended
+  variant: ESP32C3
+  
+# Enable logging
+logger:
+
+# Enable Home Assistant API
+api:
+
+ota:
+  password: "b99eff4ca5c5700ec77888f7368bc71a"
+
+wifi:
+  ssid: !secret wifi_ssid
+  password: !secret wifi_password
+
+  # Enable fallback hotspot (captive portal) in case wifi connection fails
+  ap:
+    ssid: "Ikea-Vindriktning"
+    password: "YbSpmmy1Xe3u"
+
+#captive_portal:
+
+i2c:
+  - id: bus_a
+    sda: $I2C_SDA
+    scl: $I2C_SCL
+    scan: True
+
+uart:
+  rx_pin: ${pm1006_pin_rx}
+  #tx_pin: ${pm1006_pin_tx}
+  baud_rate: 9600
+  
+sensor: 
+  - platform: pm1006
+    pm_2_5:
+      name: "air_quality_index_vindriktning_pm2_5"
+      device_class: "pm25"   
+      state_class: "measurement"
+
+  - platform: bmp280
+    temperature:
+      name: "BMP280 Temperature"
+      oversampling: 16x
+    pressure:
+      name: "BMP280 Pressure"
+    address: 0x76
+    update_interval: 60s
